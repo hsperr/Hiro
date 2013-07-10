@@ -54,6 +54,7 @@ public class SpeechRecognitionFramework implements ISpeechRecognition {
 
 		// mel filter banks
 		// melFrequency = 2595 * log(1 + linearFrequency/700)
+		melBank.applyMelFilterBank(realPowerSpectrum);
 
 		// inverse furier
 

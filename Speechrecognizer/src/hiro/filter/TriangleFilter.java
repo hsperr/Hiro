@@ -49,15 +49,20 @@ public class TriangleFilter implements Filter {
 			}
 			this.weights.add(weight);
 		}
+
 		// System.out.println(weights);
 	}
 
 	@Override
-	public void applyFilter(List<Double> values) {
+	public double applyFilter(List<Double> values) {
 		assert (values.size() == weights.size());
-		for (int i = 0; i < values.size(); i++) {
-			values.set(i, values.get(i) * weights.get(i));
-		}
-	}
+		double output = 0;
+		int firstValueIndex = (int) ((int) this.initF / this.deltaF) + 1;
 
+		for (int i = 0; i < weights.size(); i++) {
+			output += values.get(firstValueIndex + i) * weights.get(i);
+
+		}
+		return output;
+	}
 }

@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface Filter {
 
-	void applyFilter(List<Double> values);
+	double applyFilter(List<Double> values);
 
 }

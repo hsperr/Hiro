@@ -88,6 +88,21 @@ public class MelFilterBank {
 
 	}
 
+	public List<List<Double>> applyMelFilterBank(List<List<Double>> windows) {
+		List<List<Double>> result = new ArrayList<List<Double>>(windows.size());
+
+		for (List<Double> window : windows) {
+			List<Double> melfilterWindow = new ArrayList<Double>(this.numB);
+			for (int i = 0; i < this.numB; i++) {
+				melfilterWindow.add(this.triangleFilter.get(i).applyFilter(
+						window));
+			}
+			result.add(melfilterWindow);
+		}
+
+		return result;
+	}
+
 	public double getFilterBin(double freq, double freqstep) {
 		return Math.round(freq / freqstep) * freqstep;
 	}
