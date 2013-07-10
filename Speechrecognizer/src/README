@@ -3,4 +3,6 @@ This is the start of the Hiro speechrecognizer project.
 To compile this you need to download and link the jTransform library for the FFT calculations.
 You can find it here: https://sites.google.com/site/piotrwendykier/software/jtransforms
 
+
+
 Henning Sperr
