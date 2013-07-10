@@ -23,16 +23,41 @@ public class TriangleFilter implements Filter {
 		this.deltaF = deltaF;
 
 		this.height = 2.0 / (this.rightEdge - this.leftEdge);
+
 		this.numberOfWeights = (int) Math
-				.round((this.rightEdge - this.leftEdge) / this.deltaF + 1);
+				.round((this.rightEdge - this.leftEdge) / (this.deltaF + 1));
+
 		this.weights = new ArrayList<Double>(this.numberOfWeights);
 
+		double rightSlope = -this.height / (rightEdge - center);
+		double leftSlope = this.height / (center - leftEdge);
+
+		double leftb = -leftEdge * leftSlope;
+		double rightb = -rightEdge * rightSlope;
+
+		// y=mx+b
+		while (initF < leftEdge) {
+			initF += this.deltaF;
+		}
+		for (int i = 0; i < this.numberOfWeights; i++) {
+			double currentF = this.initF + i * this.deltaF;
+			double weight = 0.0;
+			if (currentF < this.center) {
+				weight = leftSlope * currentF + leftb;
+			} else {
+				weight = rightSlope * currentF + rightb;
+			}
+			this.weights.add(weight);
+		}
+		// System.out.println(weights);
 	}
 
 	@Override
 	public void applyFilter(List<Double> values) {
-		// TODO Auto-generated method stub
-
+		assert (values.size() == weights.size());
+		for (int i = 0; i < values.size(); i++) {
+			values.set(i, values.get(i) * weights.get(i));
+		}
 	}
 
 }
