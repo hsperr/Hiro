@@ -50,7 +50,7 @@ public class SpeechRecognitionFramework implements ISpeechRecognition {
 
 		// furier transfor every List<Double> in windowedSignal
 		List<List<Double>> realPowerSpectrum = fftTransformer
-				.transformWindowList(windowedSignal);
+				.calculatePowerSpectrumOfWindowList(windowedSignal);
 
 		// mel filter banks
 		// melFrequency = 2595 * log(1 + linearFrequency/700)

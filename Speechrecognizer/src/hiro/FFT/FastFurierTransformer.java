@@ -1,42 +1,93 @@
 package hiro.FFT;
 
+import hiro.audio.AudioInfo;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.emory.mathcs.jtransforms.fft.DoubleFFT_1D;
 
+/**
+ * FFT uses JTransform for the actual transformation.
+ * 
+ * @author hsperr
+ * 
+ */
 public class FastFurierTransformer {
 
-	public List<List<Double>> transformWindowList(
+	public List<List<Double>> calculatePowerSpectrumOfWindowList(
 			List<List<Double>> windowedSignal) {
 		List<List<Double>> transformedWindows = new ArrayList<List<Double>>();
 
-		int fftSize = (int) Math
-				.pow(2,
-						Math.ceil(Math.log(windowedSignal.get(0).size())
-								/ Math.log(2)));
-
 		for (List<Double> window : windowedSignal) {
-			transformedWindows.add(new ArrayList<Double>());
-			DoubleFFT_1D fftTransform = new DoubleFFT_1D(fftSize);
-			double[] result = new double[fftSize];
-
-			for (int i = 0; i < fftSize; i++) {
-				if (i < window.size()) {
-					result[i] = window.get(i);
-				} else {
-					result[i] = 0;
-				}
-			}
-
-			fftTransform.realForward(result);
-
-			for (int i = 0; i < fftSize; i++) {
-				transformedWindows.get(transformedWindows.size() - 1).add(
-						result[i]);
-			}
-
+			List<Double> powerSpectrum = calculatePowerSpectrum(window);
+			transformedWindows.add(powerSpectrum);
 		}
 		return transformedWindows;
+	}
+
+	public List<Double> calculatePowerSpectrum(List<Double> data) {
+		List<Double> result = new ArrayList<Double>();
+
+		int fftSize = getRealFFTSize(data.size());
+
+		DoubleFFT_1D fftTransform = new DoubleFFT_1D(fftSize);
+		double[] fftData = prepareDataArray(data, fftSize, true);
+
+		fftTransform.complexForward(fftData);
+
+		for (int i = 0; i < fftSize; i++) {
+			// calculate powerspectrum as sqrt(re*re+im*im)
+			result.add(Math.sqrt(fftData[2 * i] * fftData[2 * i]
+					+ fftData[2 * i + 1] * fftData[2 * i + 1]));
+		}
+
+		return result;
+	}
+
+	public double getPeakFrequencyOfPowerSpectrum(List<Double> powerSpectrum) {
+		double maxMag = Double.MIN_VALUE;
+		int maxInd = -1;
+
+		for (int i = 0; i < powerSpectrum.size(); i++) {
+			if (powerSpectrum.get(i) > maxMag) {
+				maxMag = powerSpectrum.get(i);
+				maxInd = i;
+			}
+		}
+
+		return 1.0 * maxInd * AudioInfo.sampleRate / powerSpectrum.size();
+	}
+
+	private int getRealFFTSize(int dataSize) {
+		// needs to be smallest power of two>dataSize
+		return (int) Math.pow(2, Math.ceil(Math.log(dataSize) / Math.log(2)));
+	}
+
+	private double[] prepareDataArray(List<Double> data, int fftSize,
+			boolean complex) {
+		int mul = 1; // multiplier for complex numbers
+		int add = 0; // shift for complex numbers
+		if (complex) {
+			mul = 2;
+			add = 1;
+		}
+
+		double[] result = new double[mul * fftSize];
+
+		// array contains [real1,complex1,real2,complex2,...,realn,complexn]
+		// array gets padded with zero if datasize<fftsize
+		// if complex = false
+		for (int i = 0; i < fftSize; i++) {
+			if (i < data.size()) {
+				result[mul * i + add] = 0;
+				result[mul * i] = data.get(i);
+
+			} else {
+				result[mul * i + add] = 0;
+				result[mul * i] = 0;
+			}
+		}
+		return result;
 	}
 }
