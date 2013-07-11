@@ -33,7 +33,6 @@ public class WindowFramer {
 	 */
 	public List<List<Double>> applyWindow(List<Integer> soundData,
 			int samplesPerWindowFrame, int overlap) {
-
 		List<List<Double>> result = new ArrayList<List<Double>>();
 		List<Double> window = getHammingWindow(samplesPerWindowFrame);
 
