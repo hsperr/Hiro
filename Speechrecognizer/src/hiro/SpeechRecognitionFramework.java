@@ -9,15 +9,21 @@ import hiro.window.WindowFramer;
 import java.io.IOException;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class SpeechRecognitionFramework implements ISpeechRecognition {
+
+	static Logger LOG = LoggerFactory
+			.getLogger(SpeechRecognitionFramework.class);
 
 	public static void main(String[] args) throws IOException,
 			InterruptedException {
 
-		System.out.println("Hiro speech recognizer!! yay V0.1");
+		LOG.info("Hiro speech recognizer!! yay V0.1");
 
 		ISpeechRecognition srfw = new SpeechRecognitionFramework();
-		System.out.println(srfw.getTextFroMic());
+		LOG.info(srfw.getTextFroMic());
 
 	}
 
@@ -30,7 +36,7 @@ public class SpeechRecognitionFramework implements ISpeechRecognition {
 
 		audioRecorder.init();
 		audioRecorder.startRecording();
-		System.out.println("Recording, press key to stop!");
+		LOG.info("Recording, press key to stop!");
 		try {
 			System.in.read();
 		} catch (IOException e) {
@@ -40,7 +46,7 @@ public class SpeechRecognitionFramework implements ISpeechRecognition {
 
 		audioRecorder.stopRecording();
 
-		System.out.println("Stopped Recording with: "
+		LOG.info("Stopped Recording with: "
 				+ audioRecorder.getSoundData().size() + " samples");
 
 		List<List<Double>> windowedSignal = windowFramer.applyWindow(

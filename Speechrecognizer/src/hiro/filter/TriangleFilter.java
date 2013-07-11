@@ -3,6 +3,9 @@ package hiro.filter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class TriangleFilter implements Filter {
 
 	private double height = 2;
@@ -13,6 +16,8 @@ public class TriangleFilter implements Filter {
 	private double deltaF = 0;
 	private List<Double> weights = null;
 	private int numberOfWeights;
+
+	static Logger LOG = LoggerFactory.getLogger(TriangleFilter.class);
 
 	public TriangleFilter(double leftEdge, double center, double rightEdge,
 			double initFreq, double deltaF) {

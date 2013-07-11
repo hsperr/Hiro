@@ -5,6 +5,9 @@ import hiro.audio.AudioInfo;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import edu.emory.mathcs.jtransforms.fft.DoubleFFT_1D;
 
 /**
@@ -14,6 +17,8 @@ import edu.emory.mathcs.jtransforms.fft.DoubleFFT_1D;
  * 
  */
 public class FastFurierTransformer {
+
+	static Logger LOG = LoggerFactory.getLogger(FastFurierTransformer.class);
 
 	public List<List<Double>> calculatePowerSpectrumOfWindowList(
 			List<List<Double>> windowedSignal) {

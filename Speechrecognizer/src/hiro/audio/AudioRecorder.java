@@ -1,9 +1,10 @@
 package hiro.audio;
 
-import hiro.audio.AudioInfo;
-
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,9 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.TargetDataLine;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * This class gives basic functionality to record audio from a built in device.
  * Needs to be initialized before usage.
@@ -22,6 +26,8 @@ import javax.sound.sampled.TargetDataLine;
  * 
  */
 public class AudioRecorder {
+
+	static Logger LOG = LoggerFactory.getLogger(AudioRecorder.class);
 
 	private TargetDataLine line = null;
 	private DataLine.Info info = null;
@@ -68,8 +74,24 @@ public class AudioRecorder {
 
 	public void saveToFile(String filename) {
 		File file = new File(filename);
+		if (AudioInfo.frameSize > 1) {
+			LOG.error("AudioRecorder: Error, audio doesn't support frames > 1 byte right now");
+			return;
+		}
 		try {
-			AudioSystem.write(stream, AudioFileFormat.Type.WAVE, file);
+			// TODO: Seems a bit dirty but we need a bytestream
+			ByteBuffer buffer = ByteBuffer.allocate(soundData.size());
+			byte[] sd = new byte[soundData.size()];
+			for (int i = 0; i < soundData.size(); i++) {
+				int sound = soundData.get(i);
+				sd[i] = (byte) sound;
+			}
+			buffer.put(sd);
+			InputStream b = new ByteArrayInputStream(buffer.array());
+			AudioInputStream a = new AudioInputStream(b, AudioInfo.format,
+					soundData.size());
+			AudioSystem.write(a, AudioFileFormat.Type.WAVE, file);
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -78,7 +100,7 @@ public class AudioRecorder {
 	}
 
 	public void readFromFile(String filename) {
-		System.out.println("Not Implemented Yet");
+		LOG.error("Not Implemented Yet");
 	}
 
 	public void tearDown() {

@@ -3,7 +3,12 @@ package hiro.window;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class WindowFramer {
+
+	static Logger LOG = LoggerFactory.getLogger(WindowFramer.class);
 
 	public List<Double> getHammingWindow(int numSamples) {
 
@@ -28,6 +33,7 @@ public class WindowFramer {
 	 */
 	public List<List<Double>> applyWindow(List<Integer> soundData,
 			int samplesPerWindowFrame, int overlap) {
+
 		List<List<Double>> result = new ArrayList<List<Double>>();
 		List<Double> window = getHammingWindow(samplesPerWindowFrame);
 

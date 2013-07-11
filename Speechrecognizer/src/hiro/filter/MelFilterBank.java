@@ -5,6 +5,9 @@ import hiro.audio.AudioInfo;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * MelFilterBank
  * 
@@ -22,10 +25,12 @@ public class MelFilterBank {
 	private static final double log10 = Math.log(10);
 	List<Filter> triangleFilter = null;
 
+	static Logger LOG = LoggerFactory.getLogger(MelFilterBank.class);
+
 	public MelFilterBank(int numBanks, int minFreq, int maxFreq) {
 		// if (logger.isDebugEnabled())
-		System.out.println("Creating filterbank with " + numBanks + " banks "
-				+ minFreq + " minf " + maxFreq + "maxf");
+		LOG.info("Creating filterbank with " + numBanks + " banks " + minFreq
+				+ " minf " + maxFreq + "maxf");
 
 		this.numB = numBanks;
 		this.minF = minFreq;
@@ -35,8 +40,8 @@ public class MelFilterBank {
 	}
 
 	public MelFilterBank() {
-		System.out.println("Creating filterbank with standart " + numB
-				+ " banks " + minF + " minf " + maxF + " maxf");
+		LOG.info("Creating filterbank with standart " + numB + " banks " + minF
+				+ " minf " + maxF + " maxf");
 
 		triangleFilter = new ArrayList<Filter>(numB);
 		createFilterBank();
