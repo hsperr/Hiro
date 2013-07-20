@@ -8,6 +8,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import edu.emory.mathcs.jtransforms.dct.DoubleDCT_1D;
 import edu.emory.mathcs.jtransforms.fft.DoubleFFT_1D;
 
 /**
@@ -94,5 +95,35 @@ public class FastFurierTransformer {
 			}
 		}
 		return result;
+	}
+
+	public List<List<Double>> calculateDCT(List<List<Double>> windowedSignal,
+			boolean inverse) {
+
+		List<List<Double>> transformedWindows = new ArrayList<List<Double>>();
+
+		for (List<Double> window : windowedSignal) {
+			List<Double> result = new ArrayList<Double>();
+
+			int dctSize = window.size();
+
+			DoubleDCT_1D dctTransform = new DoubleDCT_1D(dctSize);
+			double[] dctData = prepareDataArray(window, dctSize, true);
+
+			if (inverse) {
+				dctTransform.inverse(dctData, false);
+			} else {
+				dctTransform.forward(dctData, false);
+			}
+
+			for (int i = 0; i < dctSize; i++) {
+				// calculate powerspectrum as sqrt(re*re+im*im)
+				result.add(dctData[i]);
+			}
+
+			transformedWindows.add(result);
+		}
+		return transformedWindows;
+
 	}
 }
