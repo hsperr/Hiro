@@ -14,7 +14,8 @@ public class AudioRecorderTest {
 
 	@BeforeClass
 	public static void testSetup() {
-		recorder = new AudioRecorder();
+		AudioSettings settings = AudioSettings.MICROPHONE_SETTINGS;
+		recorder = new AudioRecorder(settings);
 		recorder.init();
 	}
 

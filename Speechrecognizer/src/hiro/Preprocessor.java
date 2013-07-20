@@ -1,22 +1,30 @@
 package hiro;
 
 import hiro.FFT.FastFurierTransformer;
-import hiro.audio.AudioInfo;
+import hiro.audio.AudioSettings;
 import hiro.filter.MelFilterBank;
 import hiro.window.WindowFramer;
 
 import java.util.List;
 
 public class Preprocessor {
+	private WindowFramer windowFramer = null;
+	private FastFurierTransformer fftTransformer = null;
+	private MelFilterBank melBank = null;
+	private AudioSettings settings = null;
 
-	public List<List<Double>> getMcep(List<Integer> soundData) {
-		WindowFramer windowFramer = new WindowFramer();
-		FastFurierTransformer fftTransformer = new FastFurierTransformer();
-		MelFilterBank melBank = new MelFilterBank();
+	public Preprocessor(AudioSettings settings) {
+		this.settings = settings;
+		windowFramer = new WindowFramer();
+		fftTransformer = new FastFurierTransformer();
+		melBank = new MelFilterBank();
+	}
+
+	public List<List<Double>> getMCEP(List<Integer> soundData) {
 
 		List<List<Double>> windowedSignal = windowFramer.applyWindow(soundData,
-				AudioInfo.getSamplesPerWindowFrame(),
-				AudioInfo.getSamplesOverlap());
+				settings.getSamplesPerWindowFrame(),
+				settings.getSamplesOverlap());
 
 		// furier transfor every List<Double> in windowedSignal
 		List<List<Double>> realPowerSpectrum = fftTransformer

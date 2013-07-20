@@ -35,13 +35,18 @@ public class AudioRecorder {
 	private List<Integer> soundData = new ArrayList<Integer>();
 	private AudioStreamReader recorder = null;
 	private Thread testThread = null;
+	private AudioSettings settings = null;
+
+	public AudioRecorder(AudioSettings settings) {
+		this.settings = settings;
+	}
 
 	public void init() {
-		info = new DataLine.Info(TargetDataLine.class, AudioInfo.format);
+		info = new DataLine.Info(TargetDataLine.class, settings.getFormat());
 
 		try {
 			line = (TargetDataLine) AudioSystem.getLine(info);
-			line.open(AudioInfo.format);
+			line.open(settings.getFormat());
 		} catch (LineUnavailableException e) {
 			e.printStackTrace();
 		}
@@ -74,7 +79,7 @@ public class AudioRecorder {
 
 	public void saveToFile(String filename) {
 		File file = new File(filename);
-		if (AudioInfo.frameSize > 1) {
+		if (settings.getFrameSize() > 1) {
 			LOG.error("AudioRecorder: Error, audio doesn't support frames > 1 byte right now");
 			return;
 		}
@@ -88,7 +93,7 @@ public class AudioRecorder {
 			}
 			buffer.put(sd);
 			InputStream b = new ByteArrayInputStream(buffer.array());
-			AudioInputStream a = new AudioInputStream(b, AudioInfo.format,
+			AudioInputStream a = new AudioInputStream(b, settings.getFormat(),
 					soundData.size());
 			AudioSystem.write(a, AudioFileFormat.Type.WAVE, file);
 
@@ -109,6 +114,30 @@ public class AudioRecorder {
 
 	public List<Integer> getSoundData() {
 		return soundData;
+	}
+
+	public List<Integer> recordFromMicrophone() {
+		this.init();
+		this.startRecording();
+		LOG.info("Recording, press key to stop!");
+
+		try {
+			System.in.read();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		this.stopRecording();
+
+		LOG.info("Stopped Recording with: " + this.getSoundData().size()
+				+ " samples");
+
+		// TODO maybe do not tear down after one use
+		this.tearDown();
+
+		return getSoundData();
+
 	}
 }
 

@@ -1,7 +1,5 @@
 package hiro.FFT;
 
-import hiro.audio.AudioInfo;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,20 +47,6 @@ public class FastFurierTransformer {
 		}
 
 		return result;
-	}
-
-	public double getPeakFrequencyOfPowerSpectrum(List<Double> powerSpectrum) {
-		double maxMag = Double.MIN_VALUE;
-		int maxInd = -1;
-
-		for (int i = 0; i < powerSpectrum.size(); i++) {
-			if (powerSpectrum.get(i) > maxMag) {
-				maxMag = powerSpectrum.get(i);
-				maxInd = i;
-			}
-		}
-
-		return 1.0 * maxInd * AudioInfo.sampleRate / powerSpectrum.size();
 	}
 
 	private int getRealFFTSize(int dataSize) {

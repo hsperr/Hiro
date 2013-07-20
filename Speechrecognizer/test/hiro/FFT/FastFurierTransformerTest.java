@@ -1,4 +1,4 @@
-package hiro.audio;
+package hiro.FFT;
 
 import hiro.FFT.FastFurierTransformer;
 

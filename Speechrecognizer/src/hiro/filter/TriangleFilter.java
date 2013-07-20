@@ -30,7 +30,7 @@ public class TriangleFilter implements Filter {
 		this.height = 2.0 / (this.rightEdge - this.leftEdge);
 
 		this.numberOfWeights = (int) Math
-				.round((this.rightEdge - this.leftEdge) / (this.deltaF + 1));
+				.floor((this.rightEdge - this.leftEdge) / (this.deltaF + 1));
 
 		this.weights = new ArrayList<Double>(this.numberOfWeights);
 
@@ -60,9 +60,8 @@ public class TriangleFilter implements Filter {
 
 	@Override
 	public double applyFilter(List<Double> values) {
-		assert (values.size() == weights.size());
 		double output = 0;
-		int firstValueIndex = (int) ((int) this.initF / this.deltaF) + 1;
+		int firstValueIndex = (int) ((int) this.initF / (this.deltaF + 1));
 
 		for (int i = 0; i < weights.size(); i++) {
 			output += values.get(firstValueIndex + i) * weights.get(i);

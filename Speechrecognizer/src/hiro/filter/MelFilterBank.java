@@ -1,7 +1,5 @@
 package hiro.filter;
 
-import hiro.audio.AudioInfo;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,13 +20,14 @@ public class MelFilterBank {
 	private int numB = 40;
 	private int minF = 130;
 	private int maxF = 6800;
+	private int samplingRate = 16000;
+	private int fftSize = 512;
 	private static final double log10 = Math.log(10);
 	List<Filter> triangleFilter = null;
 
 	static Logger LOG = LoggerFactory.getLogger(MelFilterBank.class);
 
 	public MelFilterBank(int numBanks, int minFreq, int maxFreq) {
-		// if (logger.isDebugEnabled())
 		LOG.info("Creating filterbank with " + numBanks + " banks " + minFreq
 				+ " minf " + maxFreq + "maxf");
 
@@ -36,7 +35,6 @@ public class MelFilterBank {
 		this.minF = minFreq;
 		this.maxF = maxFreq;
 		triangleFilter = new ArrayList<Filter>(numB);
-		createFilterBank();
 	}
 
 	public MelFilterBank() {
@@ -44,7 +42,14 @@ public class MelFilterBank {
 				+ " minf " + maxF + " maxf");
 
 		triangleFilter = new ArrayList<Filter>(numB);
-		createFilterBank();
+	}
+
+	public void setFFTSize(int fftS) {
+		this.fftSize = fftS;
+	}
+
+	public void setSamplingRate(int samplingRate) {
+		this.samplingRate = samplingRate;
 	}
 
 	// melFrequency = 2595 * log(1 + linearFrequency/700)
@@ -67,7 +72,7 @@ public class MelFilterBank {
 		double minMel = linToMel(minF);
 		double maxMel = linToMel(maxF);
 		double deltaMel = (maxMel - minMel) / (this.numB + 1);
-		double deltaLin = AudioInfo.sampleRate / (2 * 512); // samplefreq/(2*fft)
+		double deltaLin = this.samplingRate / (2 * this.fftSize); // samplefreq/(2*fft)
 
 		double leftEdge = minMel;
 		double rightEdge = minMel + 2 * deltaMel;
@@ -90,6 +95,9 @@ public class MelFilterBank {
 	}
 
 	public List<List<Double>> applyMelFilterBank(List<List<Double>> windows) {
+		if (this.triangleFilter.size() == 0)
+			createFilterBank();
+
 		List<List<Double>> result = new ArrayList<List<Double>>(windows.size());
 
 		for (List<Double> window : windows) {

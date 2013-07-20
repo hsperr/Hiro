@@ -1,6 +1,7 @@
 package hiro;
 
 import hiro.audio.AudioRecorder;
+import hiro.audio.AudioSettings;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,39 +26,17 @@ public class SpeechRecognitionFramework implements ISpeechRecognition {
 
 	public String getTextFroMic() {
 
-		Preprocessor prepro = new Preprocessor();
+		AudioSettings settings = AudioSettings.MICROPHONE_SETTINGS;
+		Preprocessor prepro = new Preprocessor(settings);
+		AudioRecorder audioRecorder = new AudioRecorder(settings);
 
-		List<Integer> audio = getAudioData();
-		List<List<Double>> mcep = prepro.getMcep(audio);
+		List<Integer> audioData = audioRecorder.recordFromMicrophone();
+		List<List<Double>> mcep = prepro.getMCEP(audioData);
 
 		// stack cepstrum or delta/delta-delta
 		// cepstrum, -> HMM
 
 		return "Kann noch nix erkennen";
-	}
-
-	private List<Integer> getAudioData() {
-		AudioRecorder audioRecorder = new AudioRecorder();
-
-		audioRecorder.init();
-		audioRecorder.startRecording();
-		LOG.info("Recording, press key to stop!");
-
-		try {
-			System.in.read();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		audioRecorder.stopRecording();
-
-		LOG.info("Stopped Recording with: "
-				+ audioRecorder.getSoundData().size() + " samples");
-
-		audioRecorder.tearDown();
-
-		return audioRecorder.getSoundData();
 	}
 
 }
