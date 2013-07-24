@@ -1,7 +1,5 @@
 package hiro.filter;
 
-import hiro.filter.MelFilterBank;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,9 +11,7 @@ public class MelFilterBankTest {
 
 	@Test
 	public void testMelFilterBank() {
-		mfb = new MelFilterBank(2, 0, 400);
-		mfb.setSamplingRate(600);
-		mfb.setFFTSize(3);
+		mfb = new MelFilterBank(2, 0, 400, 600, 3);
 
 		List<List<Double>> l = new ArrayList<List<Double>>();
 		List<Double> window1 = new ArrayList<Double>();
@@ -35,9 +31,7 @@ public class MelFilterBankTest {
 
 	@Test
 	public void testMelFilterBank10to300ThreeBanks() {
-		mfb = new MelFilterBank(3, 0, 400);
-		mfb.setSamplingRate(600);
-		mfb.setFFTSize(3);
+		mfb = new MelFilterBank(3, 0, 400, 600, 3);
 
 		List<List<Double>> l = new ArrayList<List<Double>>();
 		List<Double> window1 = new ArrayList<Double>();
@@ -58,10 +52,7 @@ public class MelFilterBankTest {
 
 	@Test
 	public void testMelFilterBank10to300() {
-		mfb = new MelFilterBank(2, 10, 300);
-		mfb.setSamplingRate(600);
-		mfb.setFFTSize(3);
-
+		mfb = new MelFilterBank(2, 10, 300, 600, 3);
 		List<List<Double>> l = new ArrayList<List<Double>>();
 		List<Double> window1 = new ArrayList<Double>();
 

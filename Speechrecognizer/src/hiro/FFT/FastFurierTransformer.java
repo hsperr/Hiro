@@ -49,7 +49,7 @@ public class FastFurierTransformer {
 		return result;
 	}
 
-	private int getRealFFTSize(int dataSize) {
+	public int getRealFFTSize(int dataSize) {
 		// needs to be smallest power of two>dataSize
 		return (int) Math.pow(2, Math.ceil(Math.log(dataSize) / Math.log(2)));
 	}

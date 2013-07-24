@@ -17,23 +17,32 @@ import org.slf4j.LoggerFactory;
  */
 public class MelFilterBank {
 
+	// reasonable standart values
+	public static final int DEFAULT_NUMB = 40;
+	public static final int DEFAULT_MINF = 130;
+	public static final int DEFAULT_MAXF = 6800;
+
 	private int numB = 40;
 	private int minF = 130;
 	private int maxF = 6800;
 	private int samplingRate = 16000;
 	private int fftSize = 512;
+
 	private static final double log10 = Math.log(10);
 	List<Filter> triangleFilter = null;
 
 	static Logger LOG = LoggerFactory.getLogger(MelFilterBank.class);
 
-	public MelFilterBank(int numBanks, int minFreq, int maxFreq) {
+	public MelFilterBank(int numBanks, int minFreq, int maxFreq,
+			int samplingRate, int fftSize) {
 		LOG.info("Creating filterbank with " + numBanks + " banks " + minFreq
 				+ " minf " + maxFreq + "maxf");
 
 		this.numB = numBanks;
 		this.minF = minFreq;
 		this.maxF = maxFreq;
+		this.samplingRate = samplingRate;
+		this.fftSize = fftSize;
 		triangleFilter = new ArrayList<Filter>(numB);
 	}
 
@@ -42,14 +51,6 @@ public class MelFilterBank {
 				+ " minf " + maxF + " maxf");
 
 		triangleFilter = new ArrayList<Filter>(numB);
-	}
-
-	public void setFFTSize(int fftS) {
-		this.fftSize = fftS;
-	}
-
-	public void setSamplingRate(int samplingRate) {
-		this.samplingRate = samplingRate;
 	}
 
 	// melFrequency = 2595 * log(1 + linearFrequency/700)

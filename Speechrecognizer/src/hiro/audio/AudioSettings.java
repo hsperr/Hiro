@@ -16,7 +16,7 @@ public enum AudioSettings {
 
 	private final AudioFormat.Encoding encoding;
 	private final String description;
-	private final float sampleRate;
+	private final int sampleRate;
 	private final int sampleSizeInBits;
 	private final int channels;
 	private final int frameSize;
@@ -28,9 +28,9 @@ public enum AudioSettings {
 	private final AudioFormat format;
 
 	private AudioSettings(String description, AudioFormat.Encoding encoding,
-			float sampleRate, int sampleSizeInBits, int channels,
-			int frameSize, int frameRate, double windowSizeInSec,
-			double overlapInSec, boolean bigEndian) {
+			int sampleRate, int sampleSizeInBits, int channels, int frameSize,
+			int frameRate, double windowSizeInSec, double overlapInSec,
+			boolean bigEndian) {
 		this.description = description;
 		this.encoding = encoding;
 		this.sampleRate = sampleRate;
@@ -53,7 +53,7 @@ public enum AudioSettings {
 		return encoding;
 	}
 
-	public float getSampleRate() {
+	public int getSampleRate() {
 		return sampleRate;
 	}
 

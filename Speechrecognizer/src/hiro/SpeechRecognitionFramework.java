@@ -17,7 +17,7 @@ public class SpeechRecognitionFramework implements ISpeechRecognition {
 	public static void main(String[] args) throws IOException,
 			InterruptedException {
 
-		LOG.info("Hiro speech recognizer!! yay V0.1");
+		LOG.info("Hiro speech recognizer!! yay V0.11");
 
 		ISpeechRecognition srfw = new SpeechRecognitionFramework();
 		LOG.info(srfw.getTextFroMic());
@@ -28,9 +28,9 @@ public class SpeechRecognitionFramework implements ISpeechRecognition {
 
 		AudioSettings settings = AudioSettings.MICROPHONE_SETTINGS;
 		Preprocessor prepro = new Preprocessor(settings);
-		AudioRecorder audioRecorder = new AudioRecorder(settings);
+		AudioRecorder recorder = new AudioRecorder(settings);
 
-		List<Integer> audioData = audioRecorder.recordFromMicrophone();
+		List<Integer> audioData = recorder.recordFromMicrophone();
 		List<List<Double>> mcep = prepro.getMCEP(audioData);
 
 		// stack cepstrum or delta/delta-delta

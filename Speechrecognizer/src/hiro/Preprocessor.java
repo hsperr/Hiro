@@ -17,7 +17,9 @@ public class Preprocessor {
 		this.settings = settings;
 		windowFramer = new WindowFramer();
 		fftTransformer = new FastFurierTransformer();
-		melBank = new MelFilterBank();
+		melBank = new MelFilterBank(MelFilterBank.DEFAULT_NUMB,
+				MelFilterBank.DEFAULT_MINF, MelFilterBank.DEFAULT_MAXF,
+				settings.getSampleRate(), 512);
 	}
 
 	public List<List<Double>> getMCEP(List<Integer> soundData) {
